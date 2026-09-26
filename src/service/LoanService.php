@@ -16,4 +16,9 @@ class LoanService {
     public function addLoan(Loan $loan): void {
         $this->dao->save($loan);
     }
+
+    public function registerReturn(int $id, string $returnDate): void {
+        $this->dao->registerReturn($id, $returnDate);
+    }
+
 }

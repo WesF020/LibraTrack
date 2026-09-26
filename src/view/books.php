@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
     if(isset($_GET['delete'])) {
-        $service->removeBook((int) $_GET['delete']);
+        $service->deleteBook((int) $_GET['delete']);
         header('Location: books.php');
         exit;
     }

@@ -42,15 +42,26 @@ class LoanDAO {
         return $loans;
     }
 
-    public function save (Loan $loans): void {
+    public function save (Loan $loan): void {
         $stmt = $this->pdo->prepare("
         INSERT INTO loans (book_id, member_id, loan_date)
         VALUES (:book_id, :member_id, :loan_date)
         ");
         $stmt->execute([
-            ':book_id'      => $book_id,
-            ':member_name'  => $member_name,
-            ':loan_date'    => $loan_date,
+            ':book_id'      => $loan->bookId,
+            ':member_id'  => $loan->memberId,
+            ':loan_date'    => $loan->loanDate,
         ]);
     }
+
+    public function registerReturn(int $id, string $returnDate): void {
+        $stmt = $this->pdo->prepare("
+            UPDATE loans SET return_date = :return_date WHERE id = :id
+            ");
+        $stmt->execute([
+            ':return_date'   =>   $returnDate,
+            ':id'            =>   $id,
+        ]);
+    }
+
 }

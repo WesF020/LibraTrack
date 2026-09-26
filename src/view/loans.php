@@ -9,6 +9,13 @@ $bookService   = new BookService();
 $memberService = new MemberService();
 $error = null;
 
+if (isset($_GET['return'])) {
+    $returnDate = trim($_POST['return_date'] ?? date('Y-m-d'));
+    $loanService->registerReturn((int) $_GET['return'], $returnDate);
+    header('Location: loans.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bookId   = (int) ($_POST['book_id']   ?? 0);
     $memberId = (int) ($_POST['member_id'] ?? 0);
@@ -89,7 +96,16 @@ $members = $memberService->getAllMembers();
                 <td><?= htmlspecialchars($loan->bookTitle) ?></td>
                 <td><?= htmlspecialchars($loan->memberName) ?></td>
                 <td><?= htmlspecialchars($loan->loanDate) ?></td>
-                <td><?= htmlspecialchars($loan->returnDate ?? '—') ?></td>
+                <td>
+                    <?php if ($loan->returnDate): ?>
+                        <?= htmlspecialchars($loan->returnDate) ?>
+                    <?php else: ?>
+                        <form method="POST" action="?return=<?= $loan->id ?>" style="display:flex;gap:0.5rem;">
+                            <input type="date" name="return_date" value="<?= date('Y-m-d')?>" required>
+                            <button type="submit">Devolver</button>
+                        </form>
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
